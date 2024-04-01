@@ -7,20 +7,23 @@ with open("astronaut_time.csv", encoding="utf-8") as f:
         data.append(dict(zip(keys, values)))
 
 
-output_lines = list()  # список для хранения выходных данных
-for item in data:
-    time = item["timeStop"]
+for j in range(1, len(data)):
+    """Сортировка вставками полученных данных"""
+    value = data[j]
+    i = j - 1
+    while i >= 0 and value["cabinNumber"].split("-")[1] < data[i]["cabinNumber"].split("-")[1]:
+        data[i + 1] = data[i]
+        i -= 1
+    data[i + 1] = value
+
+for ind in range(3):
+    """Вывод 3х первых станций"""
+    time = data[ind]["timeStop"]
     hours, minutes, seconds = map(int, time.split(":"))
-    hours = (hours + item["count"]) % 24
+    hours = (hours + data[ind]["count"]) % 24
     timeNow = ":".join([str(x).zfill(2) for x in [hours, minutes, seconds]])  # создание строки с актуальным временем
-    numberStation = item["numberStation"]
-    cabinNumber = item["cabinNumber"]
+    numberStation = data[ind]["numberStation"]
+    cabinNumber = data[ind]["cabinNumber"]
     line = (f"На станции {numberStation} в каюте {cabinNumber} восстановлено время. "
-            f"Актуальное время {timeNow}")  # создание строки
-    output_lines.append(line)
-
-with open("new_time.txt", "a+", encoding="utf-8") as f:
-    """Запись данных в выходной файл"""
-    f.write("\n".join(output_lines))
-
-print(*output_lines[:3], sep="\n")  # вывод первых 3х записей
+            f"Актуальное время {timeNow}")  # формирование выходной строки
+    print(line)
