@@ -9,10 +9,9 @@ with open("astronaut_time.csv", encoding="utf-8") as f:
         key = d['numberStation'].split('-')[0]
         stations[key] = stations.get(key, []) + [d]  # добавление астронавта в соответствующую группу
 
-
 for group_number in stations.keys():
     """Вывод данных по каждой группе"""
     cabins = ", ".join([x['cabinNumber'] for x in stations[group_number]])
     downtimes = [x['count'] for x in stations[group_number]]
-    average_downtime = str(sum(downtimes) / len(downtimes)).replace('.', ',')
+    average_downtime = str(sum(downtimes) / len(downtimes)).replace('.', ',')  # опреление ср. времени простоя
     print(f"Номер группы: {group_number}. Каюты: {cabins}. Время простоя: {average_downtime}")
